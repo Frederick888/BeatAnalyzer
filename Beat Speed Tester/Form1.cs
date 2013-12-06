@@ -8,8 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Collections;
-
-/* Preparing to upload to GitHub*/
+using System.IO;
 
 namespace Beat_Speed_Tester
 {
@@ -20,7 +19,12 @@ namespace Beat_Speed_Tester
         List<long> beat = new List<long>();
         DateTime start;
         int keyL, keyR;
-        Bitmap bmp = new Bitmap(600, 300);
+
+        FileInfo se = null;
+
+        const int BmpX = 600, BmpY = 350;
+
+        Bitmap bmp = new Bitmap(BmpX, BmpY);
         double xScale, yScale;
         bool keyLUp = true, keyRUp = true;
 
@@ -44,26 +48,45 @@ namespace Beat_Speed_Tester
         private void Form1_Load(object sender, EventArgs e)
         {
             Graphics g = Graphics.FromImage(bmp);
-            g.FillRectangle(Brushes.White, 0, 0, 599, 299);
+            g.FillRectangle(Brushes.White, 0, 0, BmpX - 1, BmpY - 1);
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             int tmp;
+
             //MessageBox.Show(e.KeyValue.ToString());
+
             if (((e.KeyValue <= 'Z' && e.KeyValue >= 'A') || e.KeyValue == 188 || e.KeyValue == 190 || e.KeyValue == 191 || e.KeyValue == 186 || e.KeyValue == 222
                 || e.KeyValue == 219 || e.KeyValue == 221 || e.KeyValue == 220 || (e.KeyValue >= 96 && e.KeyValue <= 107)
                 || (e.KeyValue >= 109 && e.KeyValue <= 111) || e.KeyValue == 189 || e.KeyValue == 187 || e.KeyValue == 192
                 || (e.KeyValue >= 48 && e.KeyValue <= 57))
                 && Int32.TryParse(textBox1.Text, out tmp))
             {
-                if (Convert.ToInt32(maskedTextBox1.Text) < 10)
+                try
                 {
-                    MessageBox.Show("10 Beats at Least!", "Error");
+                    if (Convert.ToInt32(maskedTextBox1.Text) < 10)
+                    {
+                        MessageBox.Show("10 Beats at Least!", "Error");
+                        return;
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("Invalid input!", "Error");
                     return;
                 }
+
+                
                 if (tmp > 0)
                 {
+                    if(se!=null)
+                        if (se.Exists)
+                        {
+                            WMPLib.WindowsMediaPlayer player = new WMPLib.WindowsMediaPlayer();
+                            player.URL = se.FullName;
+                        }
+
                     if (keyL == -1)
                     {
                         keyL = e.KeyValue;
@@ -104,7 +127,7 @@ namespace Beat_Speed_Tester
             keyR = -1;
 
             Graphics g = Graphics.FromImage(bmp);
-            g.FillRectangle(Brushes.White, 0, 0, 600, 300);
+            g.FillRectangle(Brushes.White, 0, 0, BmpX, BmpY);
             refresh();
         }
 
@@ -192,8 +215,8 @@ namespace Beat_Speed_Tester
                     beat.Add(i);
                 beat.Sort();
 
-                xScale = beat[beat.Count - 1] * 1f / 599f;
-                yScale = beat.Count * 1f / 299f;
+                xScale = beat[beat.Count - 1] * 1f / (float)(BmpX - 1);
+                yScale = beat.Count * 1f / (float)(BmpY - 1);
 
                 drawPoints();
 
@@ -246,12 +269,12 @@ namespace Beat_Speed_Tester
             {
                 if (beatL.IndexOf(beat[i]) >= 0)
                 {
-                    Point po = new Point(Convert.ToInt32(beat[i] / xScale), 299 - Convert.ToInt32(i / yScale));
+                    Point po = new Point(Convert.ToInt32(beat[i] / xScale), BmpY - 1 - Convert.ToInt32(i / yScale));
                     g.DrawRectangle(l, po.X, po.Y, 1, 1);
                 }
                 if (beatR.IndexOf(beat[i]) >= 0)
                 {
-                    Point po = new Point(Convert.ToInt32(beat[i] / xScale), 299 - Convert.ToInt32(i / yScale));
+                    Point po = new Point(Convert.ToInt32(beat[i] / xScale), BmpY - 1 - Convert.ToInt32(i / yScale));
                     g.DrawRectangle(r, po.X, po.Y, 1, 1);
                 }
             }
@@ -285,7 +308,7 @@ namespace Beat_Speed_Tester
                 p.Add(new Point(i, Convert.ToInt32(speed)));
             }
             double maxBPS = -1;
-            for (int i = oneSec + 1; i < 600; i++)
+            for (int i = oneSec + 1; i < BmpX; i++)
             {
                 int split = Convert.ToInt32(i * xScale);
                 int sum = 0;
@@ -334,8 +357,8 @@ namespace Beat_Speed_Tester
 
             Graphics gg = this.CreateGraphics();
             Pen p = new Pen(Color.Black);
-            gg.DrawLine(p, 650, 0, 650, 425);
-            gg.DrawRectangle(p, 24, 64, 601, 301);
+            gg.DrawLine(p, 650, 0, 650, 470);
+            gg.DrawRectangle(p, 24, 64, BmpX + 1, BmpY + 1);
         }
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
@@ -344,6 +367,17 @@ namespace Beat_Speed_Tester
                 keyLUp = true;
             if (e.KeyValue == keyR)
                 keyRUp = true;
+        }
+
+        private void buttonSE_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dia = new OpenFileDialog();
+            dia.Filter = "Wave|*.wav";
+            if (dia.ShowDialog() == DialogResult.OK)
+            {
+                se = new FileInfo(dia.FileName);
+                textBoxSE.Text = se.Name;
+            }
         }
     }
 }

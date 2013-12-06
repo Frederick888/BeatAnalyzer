@@ -51,6 +51,9 @@
             this.textBoxRedSta = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.textBoxOverall = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.textBoxSE = new System.Windows.Forms.TextBox();
+            this.buttonSE = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -107,7 +110,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(672, 10);
+            this.label3.Location = new System.Drawing.Point(672, 65);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(167, 38);
             this.label3.TabIndex = 7;
@@ -116,7 +119,7 @@
             // textBoxSec
             // 
             this.textBoxSec.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxSec.Location = new System.Drawing.Point(888, 7);
+            this.textBoxSec.Location = new System.Drawing.Point(888, 62);
             this.textBoxSec.Name = "textBoxSec";
             this.textBoxSec.Size = new System.Drawing.Size(150, 46);
             this.textBoxSec.TabIndex = 8;
@@ -125,7 +128,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(1044, 9);
+            this.label4.Location = new System.Drawing.Point(1044, 64);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(78, 38);
             this.label4.TabIndex = 9;
@@ -135,7 +138,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(672, 62);
+            this.label5.Location = new System.Drawing.Point(672, 117);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(210, 38);
             this.label5.TabIndex = 10;
@@ -144,7 +147,7 @@
             // textBoxBPM
             // 
             this.textBoxBPM.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxBPM.Location = new System.Drawing.Point(888, 59);
+            this.textBoxBPM.Location = new System.Drawing.Point(888, 114);
             this.textBoxBPM.Name = "textBoxBPM";
             this.textBoxBPM.Size = new System.Drawing.Size(234, 46);
             this.textBoxBPM.TabIndex = 11;
@@ -153,7 +156,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(672, 114);
+            this.label6.Location = new System.Drawing.Point(672, 169);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(210, 38);
             this.label6.TabIndex = 12;
@@ -162,7 +165,7 @@
             // textBoxBPS
             // 
             this.textBoxBPS.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxBPS.Location = new System.Drawing.Point(888, 111);
+            this.textBoxBPS.Location = new System.Drawing.Point(888, 166);
             this.textBoxBPS.Name = "textBoxBPS";
             this.textBoxBPS.Size = new System.Drawing.Size(234, 46);
             this.textBoxBPS.TabIndex = 13;
@@ -171,7 +174,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(672, 166);
+            this.label7.Location = new System.Drawing.Point(672, 221);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(135, 38);
             this.label7.TabIndex = 14;
@@ -180,7 +183,7 @@
             // textBoxBlue
             // 
             this.textBoxBlue.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxBlue.Location = new System.Drawing.Point(813, 163);
+            this.textBoxBlue.Location = new System.Drawing.Point(813, 218);
             this.textBoxBlue.Name = "textBoxBlue";
             this.textBoxBlue.Size = new System.Drawing.Size(80, 46);
             this.textBoxBlue.TabIndex = 15;
@@ -189,7 +192,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(899, 166);
+            this.label8.Location = new System.Drawing.Point(899, 221);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(129, 38);
             this.label8.TabIndex = 16;
@@ -198,7 +201,7 @@
             // textBoxRed
             // 
             this.textBoxRed.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxRed.Location = new System.Drawing.Point(1034, 163);
+            this.textBoxRed.Location = new System.Drawing.Point(1034, 218);
             this.textBoxRed.Name = "textBoxRed";
             this.textBoxRed.Size = new System.Drawing.Size(80, 46);
             this.textBoxRed.TabIndex = 17;
@@ -207,7 +210,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(672, 218);
+            this.label9.Location = new System.Drawing.Point(672, 273);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(199, 38);
             this.label9.TabIndex = 18;
@@ -217,7 +220,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(672, 270);
+            this.label10.Location = new System.Drawing.Point(672, 325);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(193, 38);
             this.label10.TabIndex = 19;
@@ -226,7 +229,7 @@
             // textBoxBlueSta
             // 
             this.textBoxBlueSta.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxBlueSta.Location = new System.Drawing.Point(888, 215);
+            this.textBoxBlueSta.Location = new System.Drawing.Point(888, 270);
             this.textBoxBlueSta.Name = "textBoxBlueSta";
             this.textBoxBlueSta.Size = new System.Drawing.Size(234, 46);
             this.textBoxBlueSta.TabIndex = 20;
@@ -234,7 +237,7 @@
             // textBoxRedSta
             // 
             this.textBoxRedSta.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxRedSta.Location = new System.Drawing.Point(888, 267);
+            this.textBoxRedSta.Location = new System.Drawing.Point(888, 322);
             this.textBoxRedSta.Name = "textBoxRedSta";
             this.textBoxRedSta.Size = new System.Drawing.Size(234, 46);
             this.textBoxRedSta.TabIndex = 21;
@@ -243,7 +246,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(672, 322);
+            this.label11.Location = new System.Drawing.Point(672, 377);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(115, 38);
             this.label11.TabIndex = 22;
@@ -252,16 +255,49 @@
             // textBoxOverall
             // 
             this.textBoxOverall.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxOverall.Location = new System.Drawing.Point(888, 319);
+            this.textBoxOverall.Location = new System.Drawing.Point(888, 374);
             this.textBoxOverall.Name = "textBoxOverall";
             this.textBoxOverall.Size = new System.Drawing.Size(234, 46);
             this.textBoxOverall.TabIndex = 23;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Location = new System.Drawing.Point(672, 13);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(194, 38);
+            this.label12.TabIndex = 24;
+            this.label12.Text = "Sound Effect";
+            // 
+            // textBoxSE
+            // 
+            this.textBoxSE.Enabled = false;
+            this.textBoxSE.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F);
+            this.textBoxSE.Location = new System.Drawing.Point(888, 10);
+            this.textBoxSE.Name = "textBoxSE";
+            this.textBoxSE.Size = new System.Drawing.Size(182, 46);
+            this.textBoxSE.TabIndex = 25;
+            // 
+            // buttonSE
+            // 
+            this.buttonSE.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F);
+            this.buttonSE.Location = new System.Drawing.Point(1076, 13);
+            this.buttonSE.Name = "buttonSE";
+            this.buttonSE.Size = new System.Drawing.Size(46, 43);
+            this.buttonSE.TabIndex = 26;
+            this.buttonSE.Text = "...";
+            this.buttonSE.UseVisualStyleBackColor = true;
+            this.buttonSE.Click += new System.EventHandler(this.buttonSE_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1134, 386);
+            this.ClientSize = new System.Drawing.Size(1134, 431);
+            this.Controls.Add(this.buttonSE);
+            this.Controls.Add(this.textBoxSE);
+            this.Controls.Add(this.label12);
             this.Controls.Add(this.textBoxOverall);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.textBoxRedSta);
@@ -323,6 +359,9 @@
         private System.Windows.Forms.TextBox textBoxRedSta;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox textBoxOverall;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox textBoxSE;
+        private System.Windows.Forms.Button buttonSE;
 
     }
 }
