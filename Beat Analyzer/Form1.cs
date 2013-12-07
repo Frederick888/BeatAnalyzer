@@ -10,36 +10,11 @@ using System.Windows.Forms;
 using System.Collections;
 using System.IO;
 
-namespace Beat_Speed_Tester
+namespace Beat_Analyzer
 {
     public partial class Form1 : Form
     {
-        List<long> beatL = new List<long>();
-        List<long> beatR = new List<long>();
-        List<long> beat = new List<long>();
-        DateTime start;
-        int keyL, keyR;
-
-        FileInfo se = null;
-
-        const int BmpX = 600, BmpY = 350;
-
-        Bitmap bmp = new Bitmap(BmpX, BmpY);
-        double xScale, yScale;
-        bool keyLUp = true, keyRUp = true;
-
-        void refresh()
-        {
-            this.CreateGraphics().DrawImage(bmp, 25, 65);
-        }
-
-        long getInterval(DateTime st, DateTime ed)
-        {
-            TimeSpan t = ed - st;
-            long re = t.Ticks / 100000;
-            return Math.Abs(re);
-        }
-
+        /* The General Area Start */
         public Form1()
         {
             InitializeComponent();
@@ -77,10 +52,10 @@ namespace Beat_Speed_Tester
                     return;
                 }
 
-                
+
                 if (tmp > 0)
                 {
-                    if(se!=null)
+                    if (se != null)
                         if (se.Exists)
                         {
                             WMPLib.WindowsMediaPlayer player = new WMPLib.WindowsMediaPlayer();
@@ -129,6 +104,85 @@ namespace Beat_Speed_Tester
             Graphics g = Graphics.FromImage(bmp);
             g.FillRectangle(Brushes.White, 0, 0, BmpX, BmpY);
             refresh();
+        }
+
+        private void Form1_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyValue == keyL)
+                keyLUp = true;
+            if (e.KeyValue == keyR)
+                keyRUp = true;
+        }
+
+        private void buttonSE_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dia = new OpenFileDialog();
+            dia.Filter = "Wave|*.wav";
+            if (dia.ShowDialog() == DialogResult.OK)
+            {
+                se = new FileInfo(dia.FileName);
+                textBoxSE.Text = se.Name;
+            }
+        }
+
+        private void radioButtonSpeedMode_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButtonSpeedMode.Checked)
+            {
+                groupBoxSpeedMode.Show();
+                groupBoxTimeLineMode.Hide();
+            }
+        }
+
+        private void radioButtonTimeLineMode_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButtonTimeLineMode.Checked)
+            {
+                groupBoxSpeedMode.Hide();
+                groupBoxTimeLineMode.Show();
+            }
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            refresh();
+
+            Graphics gg = this.CreateGraphics();
+            Pen p = new Pen(Color.Black);
+            gg.DrawLine(p, 655, 0, 655, 580);
+            gg.DrawRectangle(p, offsetX - 1, offsetY - 1, BmpX + 1, BmpY + 1);
+        }
+        /* The General Area Ends */
+
+
+
+        /* The Speed Mode Start */
+        List<long> beatL = new List<long>();
+        List<long> beatR = new List<long>();
+        List<long> beat = new List<long>();
+        DateTime start;
+        int keyL, keyR;
+
+        FileInfo se = null;
+
+        const int BmpX = 615, BmpY = 466;
+        const int offsetX = 24, offsetY = 65;
+
+        Bitmap bmp = new Bitmap(BmpX, BmpY);
+        double xScale, yScale;
+        bool keyLUp = true, keyRUp = true;
+
+        void refresh()
+        {
+            this.CreateGraphics().DrawImage(bmp, offsetX, offsetY);
+        }
+
+        long getInterval(DateTime st, DateTime ed)
+        {
+            TimeSpan t = ed - st;
+            long re = t.Ticks / 100000;
+            return Math.Abs(re);
         }
 
         double rCal(List<long> b)
@@ -350,34 +404,13 @@ namespace Beat_Speed_Tester
             }
         }
 
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            base.OnPaint(e);
-            refresh();
+        
+        /* The Speed Mode Ends */
 
-            Graphics gg = this.CreateGraphics();
-            Pen p = new Pen(Color.Black);
-            gg.DrawLine(p, 650, 0, 650, 470);
-            gg.DrawRectangle(p, 24, 64, BmpX + 1, BmpY + 1);
-        }
 
-        private void Form1_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.KeyValue == keyL)
-                keyLUp = true;
-            if (e.KeyValue == keyR)
-                keyRUp = true;
-        }
 
-        private void buttonSE_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog dia = new OpenFileDialog();
-            dia.Filter = "Wave|*.wav";
-            if (dia.ShowDialog() == DialogResult.OK)
-            {
-                se = new FileInfo(dia.FileName);
-                textBoxSE.Text = se.Name;
-            }
-        }
+        /* The Time Line Mode Start */
+
+        /* The Time Line Mode Ends */
     }
 }

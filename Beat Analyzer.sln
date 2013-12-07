@@ -1,7 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Beat Speed Tester", "Beat Speed Tester\Beat Speed Tester.csproj", "{A71B5080-315F-48DD-8D41-9894163BF3DD}"
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Beat Analyzer", "Beat Analyzer\Beat Analyzer.csproj", "{A71B5080-315F-48DD-8D41-9894163BF3DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

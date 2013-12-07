@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Beat_Speed_Tester
+namespace Beat_Analyzer
 {
     static class Program
     {
