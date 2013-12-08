@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,10 @@ namespace Beat_Analyzer
     public partial class Form1 : Form
     {
         /* The General Area Start */
+        static Bitmap bmp = new Bitmap(BmpX, BmpY);
+        const int BmpX = 615, BmpY = 466;
+        const int offsetX = 24, offsetY = 65;
+
         public Form1()
         {
             InitializeComponent();
@@ -22,71 +27,88 @@ namespace Beat_Analyzer
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls = false;
+
+            groupBoxTimeLineMode.Hide();
+
             Graphics g = Graphics.FromImage(bmp);
             g.FillRectangle(Brushes.White, 0, 0, BmpX - 1, BmpY - 1);
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            int tmp;
-
-            //MessageBox.Show(e.KeyValue.ToString());
-
-            if (((e.KeyValue <= 'Z' && e.KeyValue >= 'A') || e.KeyValue == 188 || e.KeyValue == 190 || e.KeyValue == 191 || e.KeyValue == 186 || e.KeyValue == 222
-                || e.KeyValue == 219 || e.KeyValue == 221 || e.KeyValue == 220 || (e.KeyValue >= 96 && e.KeyValue <= 107)
-                || (e.KeyValue >= 109 && e.KeyValue <= 111) || e.KeyValue == 189 || e.KeyValue == 187 || e.KeyValue == 192
-                || (e.KeyValue >= 48 && e.KeyValue <= 57))
-                && Int32.TryParse(textBox1.Text, out tmp))
+            if (radioButtonTimeLineMode.Checked)
             {
-                try
-                {
-                    if (Convert.ToInt32(maskedTextBox1.Text) < 10)
+                if (se != null)
+                    if (se.Exists)
                     {
-                        MessageBox.Show("10 Beats at Least!", "Error");
+                        WMPLib.WindowsMediaPlayer player = new WMPLib.WindowsMediaPlayer();
+                        player.URL = se.FullName;
+                    }
+            }
+
+            if (radioButtonSpeedMode.Checked)
+            {
+                int tmp;
+
+                //MessageBox.Show(e.KeyValue.ToString());
+
+                if (((e.KeyValue <= 'Z' && e.KeyValue >= 'A') || e.KeyValue == 188 || e.KeyValue == 190 || e.KeyValue == 191 || e.KeyValue == 186 || e.KeyValue == 222
+                    || e.KeyValue == 219 || e.KeyValue == 221 || e.KeyValue == 220 || (e.KeyValue >= 96 && e.KeyValue <= 107)
+                    || (e.KeyValue >= 109 && e.KeyValue <= 111) || e.KeyValue == 189 || e.KeyValue == 187 || e.KeyValue == 192
+                    || (e.KeyValue >= 48 && e.KeyValue <= 57))
+                    && Int32.TryParse(textBox1.Text, out tmp))
+                {
+                    try
+                    {
+                        if (Convert.ToInt32(maskedTextBox1.Text) < 10)
+                        {
+                            MessageBox.Show("10 Beats at Least!", "Error");
+                            return;
+                        }
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Invalid input!", "Error");
                         return;
                     }
-                }
-                catch
-                {
-                    MessageBox.Show("Invalid input!", "Error");
-                    return;
-                }
 
 
-                if (tmp > 0)
-                {
-                    if (se != null)
-                        if (se.Exists)
+                    if (tmp > 0)
+                    {
+                        if (se != null)
+                            if (se.Exists)
+                            {
+                                WMPLib.WindowsMediaPlayer player = new WMPLib.WindowsMediaPlayer();
+                                player.URL = se.FullName;
+                            }
+
+                        if (keyL == -1)
                         {
-                            WMPLib.WindowsMediaPlayer player = new WMPLib.WindowsMediaPlayer();
-                            player.URL = se.FullName;
+                            keyL = e.KeyValue;
+                            start = DateTime.Now;
+                        }
+                        else
+                        {
+                            if (keyR == -1 && e.KeyValue != keyL)
+                            {
+                                keyR = e.KeyValue;
+                            }
                         }
 
-                    if (keyL == -1)
-                    {
-                        keyL = e.KeyValue;
-                        start = DateTime.Now;
-                    }
-                    else
-                    {
-                        if (keyR == -1 && e.KeyValue != keyL)
+                        if (e.KeyValue == keyL && keyLUp)
                         {
-                            keyR = e.KeyValue;
+                            beatL.Add(getInterval(start, DateTime.Now));
+                            textBox1.Text = (Convert.ToInt32(textBox1.Text) - 1).ToString();
+                            keyLUp = false;
                         }
-                    }
 
-                    if (e.KeyValue == keyL && keyLUp)
-                    {
-                        beatL.Add(getInterval(start, DateTime.Now));
-                        textBox1.Text = (Convert.ToInt32(textBox1.Text) - 1).ToString();
-                        keyLUp = false;
-                    }
-
-                    if (e.KeyValue == keyR && keyRUp)
-                    {
-                        beatR.Add(getInterval(start, DateTime.Now));
-                        textBox1.Text = (Convert.ToInt32(textBox1.Text) - 1).ToString();
-                        keyRUp = false;
+                        if (e.KeyValue == keyR && keyRUp)
+                        {
+                            beatR.Add(getInterval(start, DateTime.Now));
+                            textBox1.Text = (Convert.ToInt32(textBox1.Text) - 1).ToString();
+                            keyRUp = false;
+                        }
                     }
                 }
             }
@@ -94,12 +116,20 @@ namespace Beat_Analyzer
 
         private void button1_Click(object sender, EventArgs e)
         {
-            textBox1.Text = maskedTextBox1.Text;
-            beatL.Clear();
-            beatR.Clear();
-            beat.Clear();
-            keyL = -1;
-            keyR = -1;
+            if (radioButtonTimeLineMode.Checked)
+            {
+
+            }
+
+            if (radioButtonSpeedMode.Checked)
+            {
+                textBox1.Text = maskedTextBox1.Text;
+                beatL.Clear();
+                beatR.Clear();
+                beat.Clear();
+                keyL = -1;
+                keyR = -1;
+            }
 
             Graphics g = Graphics.FromImage(bmp);
             g.FillRectangle(Brushes.White, 0, 0, BmpX, BmpY);
@@ -153,6 +183,11 @@ namespace Beat_Analyzer
             gg.DrawLine(p, 655, 0, 655, 580);
             gg.DrawRectangle(p, offsetX - 1, offsetY - 1, BmpX + 1, BmpY + 1);
         }
+
+        void refresh()
+        {
+            this.CreateGraphics().DrawImage(bmp, offsetX, offsetY);
+        }
         /* The General Area Ends */
 
 
@@ -165,18 +200,9 @@ namespace Beat_Analyzer
         int keyL, keyR;
 
         FileInfo se = null;
-
-        const int BmpX = 615, BmpY = 466;
-        const int offsetX = 24, offsetY = 65;
-
-        Bitmap bmp = new Bitmap(BmpX, BmpY);
+        
         double xScale, yScale;
         bool keyLUp = true, keyRUp = true;
-
-        void refresh()
-        {
-            this.CreateGraphics().DrawImage(bmp, offsetX, offsetY);
-        }
 
         long getInterval(DateTime st, DateTime ed)
         {
@@ -403,14 +429,70 @@ namespace Beat_Analyzer
                 textBoxBPS.Text = "Time's too short";
             }
         }
-
-        
         /* The Speed Mode Ends */
 
 
 
         /* The Time Line Mode Start */
+        int circleSize = 50;
+        int circleNow = 80;
+        int circleX = 200, circleY = 200;
+        int approachRate = 10;
+        int interval = 500;
+        
+        Pen circle = new Pen(Color.Black);
+        Pen outer = new Pen(Color.Blue);
+        Pen erase = new Pen(Color.White);
 
+        private Object lockthis = new Object();
+
+        System.Timers.Timer timer = null;
+
+        void drawNote(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            try
+            {
+                int m = circleX - circleNow;
+                int n = circleY - circleNow;
+                int o = (circleSize + circleNow) * 2;
+
+                Graphics note = this.CreateGraphics();
+
+                for (int i = circleNow; i >= 0; i--)
+                {
+                    lock (lockthis)
+                    {
+                        note.DrawEllipse(erase, m - 1, n - 1, o + 2, o + 2);
+                        if (i != 0)
+                            note.DrawEllipse(outer, m, n, o, o);
+                        m++;
+                        n++;
+                        o--;
+                        o--;
+                    }
+                    System.Threading.Thread.Sleep(approachRate);
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            circleX = (int)(offsetX + BmpX / 2 - circleSize);
+            circleY = (int)(offsetY + BmpY / 2 - circleSize);
+
+            Graphics note = this.CreateGraphics();
+            note.DrawEllipse(circle, circleX, circleY, circleSize * 2, circleSize * 2);
+            
+            timer = new System.Timers.Timer(interval);
+            timer.AutoReset = true;
+            timer.Elapsed += drawNote;
+            timer.Enabled = true;
+            
+        }
         /* The Time Line Mode Ends */
     }
 }
