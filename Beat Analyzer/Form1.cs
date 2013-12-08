@@ -15,7 +15,7 @@ namespace Beat_Analyzer
 {
     public partial class Form1 : Form
     {
-        /* The General Area Start */
+        /* The General Area Starts */
         List<long> beatL = new List<long>();
         List<long> beatR = new List<long>();
         List<long> beat = new List<long>();
@@ -125,41 +125,47 @@ namespace Beat_Analyzer
             }
         }
 
+        private void buttonHelp_Click(object sender, EventArgs e)
+        {
+            
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
+            Graphics g = Graphics.FromImage(bmp);
+            g.FillRectangle(Brushes.White, 0, 0, BmpX, BmpY);
+            refresh();
+
             if (radioButtonTimeLineMode.Checked)
             {
-                try
-                {
-                    beatSum = Convert.ToInt32(textBoxBeatSum.Text);
-                    interval = Convert.ToInt32(textBoxInterval.Text);
-                    calibration = Convert.ToInt32(textBoxCalibration.Text);
-                    circleSize = Convert.ToInt32(textBoxCircleSize.Text);
-                    outerSize = Convert.ToInt32(textBoxOuter.Text);
-                    approachRate = Convert.ToInt32(textBoxApproachRate.Text);
-                }
-                catch
-                {
-                    MessageBox.Show("Illegal Input!", "Error");
+                if (!checkInput())
                     return;
-                }
-                string inputError = "";
-                if (beatSum < 10)
-                    inputError += "Beat sum should be an integer greater than or equal to 10\n";
-                if (interval < 10)
-                    inputError += "Interval should be an integer greater than or equal to 10\n";
-                if (circleSize < 5)
-                    inputError += "Circle size should be an integer greater than or equal to 5\n";
-                if (circleSize + outerSize > 200)
-                    inputError += "Circle Size + Outer Size should be an integer less than or equal to 200\n";
-                if (approachRate <= 0)
-                    inputError += "Approach rate should be an integer greater than 0\n";
-                if (inputError != "")
-                {
-                    inputError = inputError.Substring(0, inputError.Length - 1);
-                    MessageBox.Show(inputError, "Error");
-                    return;
-                }
+
+                // Set the position of the inner circle
+                circleX = (int)(offsetX + BmpX / 2 - circleSize);
+                circleY = (int)(offsetY + BmpY / 2 - circleSize);
+
+                // Draw the inner circle
+                Graphics note = this.CreateGraphics();
+                note.DrawEllipse(circle, circleX, circleY, circleSize * 2, circleSize * 2);
+
+                // Generate the Beatmap and the Circlemap
+                beatMap.Clear();
+                circleMap.Clear();
+                for (int i = 1; i <= beatSum; i++)
+                    beatMap.Add(i * interval + 3000);   // Give users 3s for preparing
+                foreach (long i in beatMap)
+                    circleMap.Add(i - outerSize * approachRate - 20);    // The times when the circles begin
+
+                // Initialize the timer
+                updateTimer.AutoReset = true;
+                updateTimer.Elapsed += update;
+
+                // Initialize the start Time
+                start = DateTime.Now;
+
+                // Start
+                updateTimer.Enabled = true;
             }
 
             if (radioButtonSpeedMode.Checked)
@@ -171,10 +177,6 @@ namespace Beat_Analyzer
                 keyL = -1;
                 keyR = -1;
             }
-
-            Graphics g = Graphics.FromImage(bmp);
-            g.FillRectangle(Brushes.White, 0, 0, BmpX, BmpY);
-            refresh();
         }
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
@@ -233,7 +235,7 @@ namespace Beat_Analyzer
 
 
 
-        /* The Speed Mode Start */
+        /* The Speed Mode Starts */
         long getInterval(DateTime st, DateTime ed)
         {
             TimeSpan t = ed - st;
@@ -463,34 +465,207 @@ namespace Beat_Analyzer
 
 
 
-        /* The Time Line Mode Start */
-        List<long> beatMap = new List<long>();
-        List<long> circleMap = new List<long>();
+        /* The Time Line Mode Starts */
+        volatile List<long> beatMap = new List<long>();
+        volatile List<long> circleMap = new List<long>();
 
-        int beatSum;
-        int calibration;
-        int circleSize = 40;
-        int outerSize = 85;
-        int circleX = 200, circleY = 200;
-        int approachRate = 8;
-        int interval = 500;
+        volatile int beatSum;
+        volatile int calibration;
+        volatile int circleSize = 40;
+        volatile int outerSize = 85;
+        volatile int circleX = 200, circleY = 200;
+        volatile int approachRate = 20;
+        volatile int interval = 500;
         
         Pen circle = new Pen(Color.Black);
         Pen outer = new Pen(Color.Blue);
         Pen erase = new Pen(Color.White);
 
-        List<long> delay = new List<long>();
-        int autoCalibrationLeft = 10;
-
         private Object lockthis = new Object();
 
-        System.Timers.Timer timer = new System.Timers.Timer();
+        System.Timers.Timer updateTimer = new System.Timers.Timer(2);
+        long tmp;
 
         long getMs(DateTime st, DateTime ed)
         {
             TimeSpan t = ed - st;
             long re = t.Ticks / 10000;
             return Math.Abs(re);
+        }
+
+        bool checkInput()
+        {
+            // Check the input values
+            try
+            {
+                beatSum = Convert.ToInt32(textBoxBeatSum.Text);
+                interval = Convert.ToInt32(textBoxInterval.Text);
+                calibration = Convert.ToInt32(textBoxCalibration.Text);
+                circleSize = Convert.ToInt32(textBoxCircleSize.Text);
+                outerSize = Convert.ToInt32(textBoxOuter.Text);
+                approachRate = Convert.ToInt32(textBoxApproachRate.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Illegal Input!", "Error");
+                return false;
+            }
+            string inputError = "";
+            if (beatSum < 10)
+                inputError += "Beat sum should be an integer greater than or equal to 10\n";
+            if (interval < 10)
+                inputError += "Interval should be an integer greater than or equal to 10\n";
+            if (circleSize < 5)
+                inputError += "Circle size should be an integer greater than or equal to 5\n";
+            if (circleSize + outerSize > 200)
+                inputError += "Circle Size + Outer Size should be an integer less than or equal to 200\n";
+            if (approachRate <= 0)
+                inputError += "Approach rate should be an integer greater than 0\n";
+            if (inputError != "")
+            {
+                inputError = inputError.Substring(0, inputError.Length - 1);
+                MessageBox.Show(inputError, "Error");
+                return false;
+            }
+            return true;
+        }
+
+        void update(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            // Update the stop watch
+            try
+            {
+                textBoxStopWatch.Text = (getMs(start, DateTime.Now) / 1000f).ToString("0.000");
+            }
+            catch
+            {
+
+            }
+
+            if (circleMap.Count == 0)
+            {
+                updateTimer.AutoReset = false;
+                updateTimer.Enabled = false;
+                return;
+            }
+
+            if (getMs(start, DateTime.Now) < circleMap[0])
+            {
+                return;
+            }
+            else
+            {
+                System.Timers.Timer t = new System.Timers.Timer(1);
+                t.AutoReset = false;
+                t.Elapsed += drawNote;
+                tmp = circleMap[0];
+                circleMap.RemoveAt(0);
+                t.Enabled = true;
+            }
+        }
+
+        void drawNote(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            long count;
+            lock (lockthis)
+            {
+                count = tmp + 20;
+            }
+
+            int m = circleX - outerSize;
+            int n = circleY - outerSize;
+            int o = (circleSize + outerSize) * 2;
+
+            Graphics note = this.CreateGraphics();
+            note.DrawEllipse(circle, circleX, circleY, circleSize * 2, circleSize * 2);
+
+            for (int i = outerSize; i >= 0; i--)
+            {
+                while (getMs(start, DateTime.Now) < count + (outerSize - i) * approachRate)
+                    System.Threading.Thread.Sleep(1);
+
+                lock (lockthis)
+                {
+                    note.DrawEllipse(erase, m - 1, n - 1, o + 2, o + 2);
+                    if (i != 0)
+                        note.DrawEllipse(outer, m, n, o, o);
+                    m++;
+                    n++;
+                    o--;
+                    o--;
+                }
+            }
+        }
+
+        private void textBoxBeatSum_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                double tt = ((Convert.ToInt32(textBoxBeatSum.Text) + 1) * Convert.ToInt32(textBoxInterval.Text)) / 1000d;
+                tt = Math.Round(tt, 3);
+                textBoxTotalTime.Text = tt.ToString("0.000");
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void textBoxInterval_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                double tt = ((Convert.ToInt32(textBoxBeatSum.Text) + 1) * Convert.ToInt32(textBoxInterval.Text)) / 1000d;
+                tt = Math.Round(tt, 3);
+                textBoxTotalTime.Text = tt.ToString("0.000");
+            }
+            catch
+            {
+
+            }
+        }
+        /* The Time Line Mode Ends */
+
+
+
+        /* Legacy Codes Start */
+        /*
+        List<long> testDraws = new List<long>();
+        void drawNote(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            Stopwatch test = new Stopwatch();
+            test.Start();
+            try
+            {
+                int m = circleX - outerSize;
+                int n = circleY - outerSize;
+                int o = (circleSize + outerSize) * 2;
+
+                Graphics note = this.CreateGraphics();
+                note.DrawEllipse(circle, circleX, circleY, circleSize * 2, circleSize * 2);
+
+                for (int i = outerSize; i >= 0; i--)
+                {
+                    lock (lockthis)
+                    {
+                        note.DrawEllipse(erase, m - 1, n - 1, o + 2, o + 2);
+                        if (i != 0)
+                            note.DrawEllipse(outer, m, n, o, o);
+                        m++;
+                        n++;
+                        o--;
+                        o--;
+                    }
+
+                    System.Threading.Thread.Sleep(ts);
+                }
+            }
+            catch
+            {
+
+            }
+            test.Stop();
+            testDraws.Add(test.ElapsedMilliseconds);
         }
 
         void drawNoteCalibration(object sender, System.Timers.ElapsedEventArgs e)
@@ -510,6 +685,7 @@ namespace Beat_Analyzer
                     int o = (circleSize + outerSize) * 2;
 
                     Graphics note = this.CreateGraphics();
+                    note.DrawEllipse(circle, circleX, circleY, circleSize * 2, circleSize * 2);
 
                     for (int i = outerSize; i >= 0; i--)
                     {
@@ -542,13 +718,20 @@ namespace Beat_Analyzer
                 timer.AutoReset = false;
                 timer.Enabled = false;
                 System.Threading.Thread.Sleep(outerSize * approachRate);
-                long avgDelay = (long)delay.Average();
-                MessageBox.Show("Auto-Calibration Completed!\nAverage Delay: " + avgDelay + " ticks", "Notification");
+                avgDelay = (int)delay.Average();
+                string msg = "Auto-Calibration Completed!\nAverage Delay: " + avgDelay + " ticks\n";
+                foreach (long i in delay)
+                    msg += i.ToString() + "\n";
+                msg = msg.Substring(0, msg.Length - 1);
+                MessageBox.Show(msg, "Notification");
             }
         }
 
         private void buttonCalibration_Click(object sender, EventArgs e)
         {
+            if (!checkInput())
+                return;
+
             delay.Clear();
             autoCalibrationLeft = 11;
 
@@ -565,34 +748,7 @@ namespace Beat_Analyzer
             timer.Elapsed += drawNoteCalibration;
             timer.Enabled = true;
         }
-
-        private void textBoxBeatSum_TextChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                double tt = ((Convert.ToInt32(textBoxBeatSum.Text) + 1) * Convert.ToInt32(textBoxInterval.Text)) / 1000d;
-                tt = Math.Round(tt, 3);
-                textBoxTotalTime.Text = tt.ToString("0.000");
-            }
-            catch
-            {
-
-            }
-        }
-
-        private void textBoxInterval_TextChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                double tt = ((Convert.ToInt32(textBoxBeatSum.Text) + 1) * Convert.ToInt32(textBoxInterval.Text)) / 1000d;
-                tt = Math.Round(tt, 3);
-                textBoxTotalTime.Text = tt.ToString("0.000");
-            }
-            catch
-            {
-
-            }
-        }
-        /* The Time Line Mode Ends */
+        */
+        /* Legacy Codes End */
     }
 }

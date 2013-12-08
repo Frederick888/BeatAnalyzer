@@ -56,7 +56,6 @@
             this.buttonSE = new System.Windows.Forms.Button();
             this.groupBoxSpeedMode = new System.Windows.Forms.GroupBox();
             this.groupBoxTimeLineMode = new System.Windows.Forms.GroupBox();
-            this.buttonCalibration = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label33 = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
@@ -393,7 +392,6 @@
             // 
             // groupBoxTimeLineMode
             // 
-            this.groupBoxTimeLineMode.Controls.Add(this.buttonCalibration);
             this.groupBoxTimeLineMode.Controls.Add(this.groupBox2);
             this.groupBoxTimeLineMode.Controls.Add(this.groupBox1);
             this.groupBoxTimeLineMode.Controls.Add(this.label19);
@@ -407,17 +405,6 @@
             this.groupBoxTimeLineMode.TabIndex = 30;
             this.groupBoxTimeLineMode.TabStop = false;
             this.groupBoxTimeLineMode.Text = "Time Line Mode";
-            // 
-            // buttonCalibration
-            // 
-            this.buttonCalibration.Font = new System.Drawing.Font("Microsoft YaHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonCalibration.Location = new System.Drawing.Point(238, 388);
-            this.buttonCalibration.Name = "buttonCalibration";
-            this.buttonCalibration.Size = new System.Drawing.Size(226, 35);
-            this.buttonCalibration.TabIndex = 47;
-            this.buttonCalibration.Text = "Auto-Calibration";
-            this.buttonCalibration.UseVisualStyleBackColor = true;
-            this.buttonCalibration.Click += new System.EventHandler(this.buttonCalibration_Click);
             // 
             // groupBox2
             // 
@@ -637,7 +624,7 @@
             this.textBoxApproachRate.Name = "textBoxApproachRate";
             this.textBoxApproachRate.Size = new System.Drawing.Size(119, 35);
             this.textBoxApproachRate.TabIndex = 31;
-            this.textBoxApproachRate.Text = "8";
+            this.textBoxApproachRate.Text = "20";
             // 
             // label21
             // 
@@ -850,6 +837,7 @@
             this.textBoxBeatSum.Name = "textBoxBeatSum";
             this.textBoxBeatSum.Size = new System.Drawing.Size(140, 35);
             this.textBoxBeatSum.TabIndex = 27;
+            this.textBoxBeatSum.Text = "20";
             this.textBoxBeatSum.TextChanged += new System.EventHandler(this.textBoxBeatSum_TextChanged);
             // 
             // textBoxStopWatch
@@ -918,6 +906,7 @@
             this.buttonHelp.TabIndex = 31;
             this.buttonHelp.Text = "Help";
             this.buttonHelp.UseVisualStyleBackColor = true;
+            this.buttonHelp.Click += new System.EventHandler(this.buttonHelp_Click);
             // 
             // Form1
             // 
@@ -1033,7 +1022,6 @@
         private System.Windows.Forms.TextBox textBoxTotalTime;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Button buttonCalibration;
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.TextBox textBoxCalibration;
         private System.Windows.Forms.Label label27;
