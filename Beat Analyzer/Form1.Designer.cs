@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.label1 = new System.Windows.Forms.Label();
             this.maskedTextBox1 = new System.Windows.Forms.MaskedTextBox();
@@ -57,6 +59,9 @@
             this.groupBoxSpeedMode = new System.Windows.Forms.GroupBox();
             this.groupBoxTimeLineMode = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label34 = new System.Windows.Forms.Label();
+            this.textBoxMiss = new System.Windows.Forms.TextBox();
+            this.label35 = new System.Windows.Forms.Label();
             this.label33 = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
             this.label31 = new System.Windows.Forms.Label();
@@ -100,6 +105,9 @@
             this.radioButtonTimeLineMode = new System.Windows.Forms.RadioButton();
             this.radioButtonSpeedMode = new System.Windows.Forms.RadioButton();
             this.buttonHelp = new System.Windows.Forms.Button();
+            this.labelAcc = new System.Windows.Forms.Label();
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.buttonRes = new System.Windows.Forms.Button();
             this.groupBoxSpeedMode.SuspendLayout();
             this.groupBoxTimeLineMode.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -123,6 +131,7 @@
             this.splitContainer4.Panel2.SuspendLayout();
             this.splitContainer4.SuspendLayout();
             this.groupBoxModeSelect.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -392,6 +401,7 @@
             // 
             // groupBoxTimeLineMode
             // 
+            this.groupBoxTimeLineMode.Controls.Add(this.buttonRes);
             this.groupBoxTimeLineMode.Controls.Add(this.groupBox2);
             this.groupBoxTimeLineMode.Controls.Add(this.groupBox1);
             this.groupBoxTimeLineMode.Controls.Add(this.label19);
@@ -408,6 +418,9 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.label34);
+            this.groupBox2.Controls.Add(this.textBoxMiss);
+            this.groupBox2.Controls.Add(this.label35);
             this.groupBox2.Controls.Add(this.label33);
             this.groupBox2.Controls.Add(this.label32);
             this.groupBox2.Controls.Add(this.label31);
@@ -420,16 +433,45 @@
             this.groupBox2.Font = new System.Drawing.Font("Microsoft YaHei", 9F);
             this.groupBox2.Location = new System.Drawing.Point(238, 234);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(226, 144);
+            this.groupBox2.Size = new System.Drawing.Size(226, 203);
             this.groupBox2.TabIndex = 32;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Difficulty Settings (ms)";
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Font = new System.Drawing.Font("Microsoft YaHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label34.Location = new System.Drawing.Point(170, 148);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(42, 28);
+            this.label34.TabIndex = 62;
+            this.label34.Text = "ms";
+            // 
+            // textBoxMiss
+            // 
+            this.textBoxMiss.Font = new System.Drawing.Font("Microsoft YaHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxMiss.Location = new System.Drawing.Point(89, 145);
+            this.textBoxMiss.Name = "textBoxMiss";
+            this.textBoxMiss.Size = new System.Drawing.Size(75, 35);
+            this.textBoxMiss.TabIndex = 61;
+            this.textBoxMiss.Text = "200";
+            // 
+            // label35
+            // 
+            this.label35.AutoSize = true;
+            this.label35.Font = new System.Drawing.Font("Microsoft YaHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label35.Location = new System.Drawing.Point(6, 148);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(59, 28);
+            this.label35.TabIndex = 60;
+            this.label35.Text = "Miss";
             // 
             // label33
             // 
             this.label33.AutoSize = true;
             this.label33.Font = new System.Drawing.Font("Microsoft YaHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label33.Location = new System.Drawing.Point(161, 25);
+            this.label33.Location = new System.Drawing.Point(170, 25);
             this.label33.Name = "label33";
             this.label33.Size = new System.Drawing.Size(42, 28);
             this.label33.TabIndex = 59;
@@ -439,7 +481,7 @@
             // 
             this.label32.AutoSize = true;
             this.label32.Font = new System.Drawing.Font("Microsoft YaHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label32.Location = new System.Drawing.Point(161, 66);
+            this.label32.Location = new System.Drawing.Point(170, 66);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(42, 28);
             this.label32.TabIndex = 58;
@@ -449,7 +491,7 @@
             // 
             this.label31.AutoSize = true;
             this.label31.Font = new System.Drawing.Font("Microsoft YaHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label31.Location = new System.Drawing.Point(161, 107);
+            this.label31.Location = new System.Drawing.Point(170, 107);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(42, 28);
             this.label31.TabIndex = 57;
@@ -458,11 +500,11 @@
             // textBoxGood
             // 
             this.textBoxGood.Font = new System.Drawing.Font("Microsoft YaHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxGood.Location = new System.Drawing.Point(80, 104);
+            this.textBoxGood.Location = new System.Drawing.Point(89, 104);
             this.textBoxGood.Name = "textBoxGood";
             this.textBoxGood.Size = new System.Drawing.Size(75, 35);
             this.textBoxGood.TabIndex = 56;
-            this.textBoxGood.Text = "300";
+            this.textBoxGood.Text = "100";
             // 
             // label30
             // 
@@ -477,11 +519,11 @@
             // textBoxGreat
             // 
             this.textBoxGreat.Font = new System.Drawing.Font("Microsoft YaHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxGreat.Location = new System.Drawing.Point(80, 63);
+            this.textBoxGreat.Location = new System.Drawing.Point(89, 63);
             this.textBoxGreat.Name = "textBoxGreat";
             this.textBoxGreat.Size = new System.Drawing.Size(75, 35);
             this.textBoxGreat.TabIndex = 54;
-            this.textBoxGreat.Text = "200";
+            this.textBoxGreat.Text = "50";
             // 
             // label29
             // 
@@ -496,11 +538,11 @@
             // textBoxJust
             // 
             this.textBoxJust.Font = new System.Drawing.Font("Microsoft YaHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxJust.Location = new System.Drawing.Point(80, 22);
+            this.textBoxJust.Location = new System.Drawing.Point(89, 22);
             this.textBoxJust.Name = "textBoxJust";
             this.textBoxJust.Size = new System.Drawing.Size(75, 35);
             this.textBoxJust.TabIndex = 52;
-            this.textBoxJust.Text = "100";
+            this.textBoxJust.Text = "25";
             // 
             // label28
             // 
@@ -640,7 +682,7 @@
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("Microsoft YaHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(365, 29);
+            this.label19.Location = new System.Drawing.Point(238, 31);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(22, 28);
             this.label19.TabIndex = 35;
@@ -745,7 +787,7 @@
             this.textBoxInterval.Name = "textBoxInterval";
             this.textBoxInterval.Size = new System.Drawing.Size(140, 35);
             this.textBoxInterval.TabIndex = 42;
-            this.textBoxInterval.Text = "500";
+            this.textBoxInterval.Text = "1000";
             this.textBoxInterval.TextChanged += new System.EventHandler(this.textBoxInterval_TextChanged);
             // 
             // label13
@@ -818,7 +860,7 @@
             this.textBoxCalibration.Name = "textBoxCalibration";
             this.textBoxCalibration.Size = new System.Drawing.Size(140, 35);
             this.textBoxCalibration.TabIndex = 48;
-            this.textBoxCalibration.Text = "0";
+            this.textBoxCalibration.Text = "25";
             // 
             // label26
             // 
@@ -846,7 +888,7 @@
             this.textBoxStopWatch.Font = new System.Drawing.Font("Microsoft YaHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxStopWatch.Location = new System.Drawing.Point(131, 26);
             this.textBoxStopWatch.Name = "textBoxStopWatch";
-            this.textBoxStopWatch.Size = new System.Drawing.Size(228, 35);
+            this.textBoxStopWatch.Size = new System.Drawing.Size(101, 35);
             this.textBoxStopWatch.TabIndex = 33;
             // 
             // label20
@@ -908,11 +950,48 @@
             this.buttonHelp.UseVisualStyleBackColor = true;
             this.buttonHelp.Click += new System.EventHandler(this.buttonHelp_Click);
             // 
+            // labelAcc
+            // 
+            this.labelAcc.AutoSize = true;
+            this.labelAcc.BackColor = System.Drawing.Color.White;
+            this.labelAcc.Font = new System.Drawing.Font("Microsoft YaHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelAcc.Location = new System.Drawing.Point(300, 285);
+            this.labelAcc.Name = "labelAcc";
+            this.labelAcc.Size = new System.Drawing.Size(58, 28);
+            this.labelAcc.TabIndex = 32;
+            this.labelAcc.Text = "Just!";
+            // 
+            // chart1
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
+            this.chart1.Location = new System.Drawing.Point(24, 65);
+            this.chart1.Name = "chart1";
+            series1.ChartArea = "ChartArea1";
+            series1.Name = "time";
+            this.chart1.Series.Add(series1);
+            this.chart1.Size = new System.Drawing.Size(615, 466);
+            this.chart1.TabIndex = 33;
+            this.chart1.Text = "chart1";
+            // 
+            // buttonRes
+            // 
+            this.buttonRes.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F);
+            this.buttonRes.Location = new System.Drawing.Point(266, 19);
+            this.buttonRes.Name = "buttonRes";
+            this.buttonRes.Size = new System.Drawing.Size(198, 46);
+            this.buttonRes.TabIndex = 36;
+            this.buttonRes.Text = "See Results";
+            this.buttonRes.UseVisualStyleBackColor = true;
+            this.buttonRes.Click += new System.EventHandler(this.buttonRes_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1154, 541);
+            this.Controls.Add(this.chart1);
+            this.Controls.Add(this.labelAcc);
             this.Controls.Add(this.buttonHelp);
             this.Controls.Add(this.groupBoxTimeLineMode);
             this.Controls.Add(this.groupBoxModeSelect);
@@ -927,7 +1006,7 @@
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Beat Analyzer 2.0 by Frederick888";
+            this.Text = "Beat Analyzer 2.1 by Frederick888";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
@@ -967,6 +1046,7 @@
             this.splitContainer4.ResumeLayout(false);
             this.groupBoxModeSelect.ResumeLayout(false);
             this.groupBoxModeSelect.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1045,6 +1125,12 @@
         private System.Windows.Forms.Label label32;
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.Button buttonHelp;
+        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.TextBox textBoxMiss;
+        private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.Label labelAcc;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.Button buttonRes;
 
     }
 }
