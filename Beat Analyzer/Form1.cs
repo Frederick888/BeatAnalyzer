@@ -205,15 +205,7 @@ namespace Beat_Analyzer
 
         private void buttonHelp_Click(object sender, EventArgs e)
         {
-            string msg = "";
-            foreach (long i in deviation)
-                msg += i.ToString() + "\n";
-            List<long> tmp = new List<long>();
-            foreach (long i in deviation)
-                if (i != -999)
-                    tmp.Add(i);
-            msg += "Average: " + tmp.Average();
-            MessageBox.Show(msg);
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -224,6 +216,14 @@ namespace Beat_Analyzer
 
             if (radioButtonTimeLineMode.Checked)
             {
+                if (started)
+                {
+                    button1.Enabled = true;
+                    button1.Text = "(Re)Start";
+                    started = false;
+                    return;
+                }
+
                 if (!checkInput())
                     return;
 
@@ -231,17 +231,17 @@ namespace Beat_Analyzer
                 labelAcc.Show();
                 searchFrom = 0;
 
+                button1.Text = "Stop";
+                button1.Enabled = false;
+
+                // Start
+                started = true;
+
                 // Set the position of the inner circle
-                circleX = (int)(offsetX + BmpX / 2 - circleSize);
-                circleY = (int)(offsetY + BmpY / 2 - circleSize);
+                circleX = (int)(BmpX / 2 - circleSize / 2);
+                circleY = (int)(BmpY / 2 - circleSize / 2);
 
-                // Draw the inner circle
-                Graphics note = Graphics.FromImage(bmp);
-                note.FillRectangle(Brushes.White, 0, 0, BmpX, BmpY);
-                note.DrawEllipse(circle, circleX - offsetX, circleY - offsetY, circleSize * 2, circleSize * 2);
-                refresh();
-
-                // Generate the Beatmap and the Circlemap
+                // Generate the Beatmap
                 beatMap.Clear();
                 circleMap.Clear();
                 mark.Clear();
@@ -250,21 +250,19 @@ namespace Beat_Analyzer
                     beatMap.Add(i * interval + 3000);   // Give users 3s for preparing
                 foreach (long i in beatMap)
                 {
-                    circleMap.Add(i - outerSize * approachRate - 300);    // The times when the circles begin
+                    circleMap.Add(i - outerSize * approachRate);
                     mark.Add(0);
                     deviation.Add(-999);
                 }
+                renderWait = beatMap[0] - outerSize * approachRate;
 
                 // Initialize the timer
                 updateTimer.AutoReset = true;
                 updateTimer.Elapsed += update;
 
-                // Initialize the start Time
-                start = DateTime.Now;
-
-                // Start
-                started = true;
-                updateTimer.Enabled = true;
+                // Rendering
+                initializeBackgroundRender();
+                backgroundRender.RunWorkerAsync();
             }
 
             if (radioButtonSpeedMode.Checked)
@@ -313,6 +311,7 @@ namespace Beat_Analyzer
             {
                 groupBoxSpeedMode.Hide();
                 groupBoxTimeLineMode.Show();
+                updateTotalTime();
             }
         }
 
@@ -588,14 +587,15 @@ namespace Beat_Analyzer
         Pen outer = new Pen(Color.Blue);
         Pen erase = new Pen(Color.White);
 
-        TimeSpan renderLevel = new TimeSpan(5000);
-        int coolDownLevel = 2;     // An integer between 1~19; the lower, the longer this thread sleeps
-        int coolDownLevel2 = 2;     // An integer between 1~5
+        public volatile List<Bitmap> cache = new List<Bitmap>();
 
         private Object lockthis = new Object();
 
         System.Timers.Timer updateTimer = new System.Timers.Timer(1);
-        long tmp;
+        System.Timers.Timer drawTimer = new System.Timers.Timer(1);
+
+        double renderWait = 0;
+        double renderInterval = 0;
 
         long getMs(DateTime st, DateTime ed)
         {
@@ -651,6 +651,12 @@ namespace Beat_Analyzer
 
         void update(object sender, System.Timers.ElapsedEventArgs e)
         {
+            if (!started)
+            {
+                updateTimer.Enabled = false;
+                return;
+            }
+
             // Update the stop watch
             try
             {
@@ -666,113 +672,118 @@ namespace Beat_Analyzer
                 updateTimer.AutoReset = false;
                 updateTimer.Enabled = false;
                 started = false;
+                button1.Enabled = true;
+                button1.Text = "(Re)Start";
                 return;
-            }
-
-            if (circleMap.Count > 0)
-            {
-                if (getMs(start, DateTime.Now) < circleMap[0])
-                {
-                    return;
-                }
-                else
-                {
-                    System.Timers.Timer t = new System.Timers.Timer(1);
-                    t.AutoReset = false;
-                    t.Elapsed += drawNote;
-                    tmp = circleMap[0];
-                    circleMap.RemoveAt(0);
-                    t.Enabled = true;
-                }
             }
         }
 
-        //List<long> testDraw = new List<long>();
-        void drawNote(object sender, System.Timers.ElapsedEventArgs e)
+        void drawNoteMulti(object sender, System.Timers.ElapsedEventArgs e)
         {
-            //Stopwatch ss = new Stopwatch();
-            //ss.Start();
+            int p1, p2, p3;
+            int nlt = outerSize * approachRate;
+            int max = (int)Math.Truncate(nlt / (double)interval + 1);
+
+            p1 = (int)Math.Truncate((max - 1) * interval / (double)approachRate - 1);
+            p2 = p1 + (int)Math.Truncate(interval / (double)approachRate);
+            p3 = cache.Count() - 1;
+
+            Graphics m = this.CreateGraphics();
+            renderInterval = ((beatSum - 1) * interval + nlt) / (double)(p1 + (p2 - p1) * (beatSum - max) + p3 - p2);
+            renderInterval = renderInterval * 0.9996;
+
+            //int n = 0;
+
+            button1.Enabled = true;
+            // Period 1
+            for (int i = 0; i <= p1; i++)
+            {
+                while (getMs(start, DateTime.Now) < renderWait)
+                    System.Threading.Thread.Sleep(1);
+                if (!started)
+                    return;
+                renderWait += renderInterval;
+                m.DrawImage(cache[i], offsetX, offsetY);
+                //n++;
+            }
+            // Period 2
+            int toDraw = max;
+            while (toDraw != beatSum)
+            {
+                for (int i = p1 + 1; i <= p2; i++)
+                {
+                    while (getMs(start, DateTime.Now) < renderWait)
+                        System.Threading.Thread.Sleep(1);
+                    if (!started)
+                        return;
+                    renderWait += renderInterval;
+                    m.DrawImage(cache[i], offsetX, offsetY);
+                    //n++;
+                }
+                toDraw++;
+            }
+            //Period 3
+            for (int i = p2 + 1; i <= p3; i++)
+            {
+                while (getMs(start, DateTime.Now) < renderWait)
+                    System.Threading.Thread.Sleep(1);
+                if (!started)
+                    return;
+                renderWait += renderInterval;
+                m.DrawImage(cache[i], offsetX, offsetY);
+                //n++;
+            }
+            //MessageBox.Show(getMs(start, DateTime.Now).ToString());
+            //MessageBox.Show(renderInterval.ToString());
+            //MessageBox.Show(n.ToString());
+        }
+
+        void drawNoteSingle(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            Graphics m = this.CreateGraphics();
+            double renderInterval = approachRate * 0.996;
+
+            button1.Enabled = true;
+
+            for (int i = 1; i <= beatSum; i++)
+            {
+                while (getMs(start, DateTime.Now) < circleMap[i - 1])
+                    System.Threading.Thread.Sleep(1);
+                for (int k = 0; k <= outerSize; k++)
+                {
+                    if (!started)
+                        return;
+                    while (getMs(start, DateTime.Now) < circleMap[i - 1] + k * renderInterval)
+                        System.Threading.Thread.Sleep(1);
+                    m.DrawImage(cache[k], offsetX, offsetY);
+                }
+            }
+
+            MessageBox.Show(getMs(start, DateTime.Now).ToString());
+        }
+
+        void updateTotalTime()
+        {
             try
             {
-                long count;
-                lock (lockthis)
-                {
-                    count = tmp + 300;
-                }
-
-                int m = circleX - outerSize;
-                int n = circleY - outerSize;
-                int o = (circleSize + outerSize) * 2;
-
-                Graphics note = this.CreateGraphics();
-
-                // L1 cool down
-                if (count - getMs(start, DateTime.Now) > 20)
-                {
-                    TimeSpan tmp = new TimeSpan((count - getMs(start, DateTime.Now) - coolDownLevel) * 10000);
-                    System.Threading.Thread.Sleep(tmp);
-                }                
-                
-                
-                for (int i = outerSize; i >= 0; i--)
-                {
-                    while (getMs(start, DateTime.Now) < count + (outerSize - i) * approachRate - 1)
-                        System.Threading.Thread.Sleep(renderLevel);
-                    lock (lockthis)
-                    {
-                        note.DrawEllipse(erase, m - 1, n - 1, o + 2, o + 2);
-                        if (i != 0)
-                            note.DrawEllipse(outer, m, n, o, o);
-                        m++;
-                        n++;
-                        o--;
-                        o--;
-                    }
-
-                    // L2 cool down
-                    if(i > 0)
-                        if ((count + (outerSize - i - 1) * approachRate - getMs(start, DateTime.Now)) * 10000 > 5)
-                        {
-                            TimeSpan tmp2 = new TimeSpan((count + (outerSize - i - 1) * approachRate - getMs(start, DateTime.Now) - coolDownLevel2) * 10000);
-                            System.Threading.Thread.Sleep(tmp2);
-                        }
-                }
+                double tt = (Convert.ToInt32(textBoxBeatSum.Text) * Convert.ToInt32(textBoxInterval.Text)) / 1000d;
+                tt = Math.Round(tt, 3);
+                textBoxTotalTime.Text = tt.ToString("0.000");
             }
             catch
             {
 
             }
-            //ss.Stop();
-            //testDraw.Add(ss.ElapsedMilliseconds);
-            //testDraw.Add(getMs(start, DateTime.Now));
         }
 
         private void textBoxBeatSum_TextChanged(object sender, EventArgs e)
         {
-            try
-            {
-                double tt = ((Convert.ToInt32(textBoxBeatSum.Text) + 1) * Convert.ToInt32(textBoxInterval.Text)) / 1000d;
-                tt = Math.Round(tt, 3);
-                textBoxTotalTime.Text = tt.ToString("0.000");
-            }
-            catch
-            {
-
-            }
+            updateTotalTime();
         }
 
         private void textBoxInterval_TextChanged(object sender, EventArgs e)
         {
-            try
-            {
-                double tt = ((Convert.ToInt32(textBoxBeatSum.Text) + 1) * Convert.ToInt32(textBoxInterval.Text)) / 1000d;
-                tt = Math.Round(tt, 3);
-                textBoxTotalTime.Text = tt.ToString("0.000");
-            }
-            catch
-            {
-
-            }
+            updateTotalTime();
         }
 
         private void buttonRes_Click(object sender, EventArgs e)
@@ -786,6 +797,200 @@ namespace Beat_Analyzer
                 chart1.Series["time"].ChartType = SeriesChartType.Line;
                 chart1.Show();
             }
+        }
+
+        /* Generate the cache */
+        BackgroundWorker backgroundRender = new BackgroundWorker();
+
+        void initializeBackgroundRender()
+        {
+            backgroundRender.DoWork += backgroundRender_DoWork;
+            backgroundRender.RunWorkerCompleted += backgroundRender_RunWorkerCompleted;
+        }
+
+        void backgroundRender_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            textBoxStopWatch.Text = "Finished";
+            cache = (List<Bitmap>)e.Result;
+
+            
+            // Initialize the start Time
+            start = DateTime.Now.AddMilliseconds(1);
+
+            //button1.Enabled = true;
+
+            int nlt = outerSize * approachRate;
+            if (nlt > interval)
+            {
+                drawTimer.AutoReset = false;
+                drawTimer.Elapsed += drawNoteMulti;
+            }
+            else
+            {
+                drawTimer.AutoReset = false;
+                drawTimer.Elapsed += drawNoteSingle;
+            }
+
+            updateTimer.Enabled = true;
+            drawTimer.Enabled = true;
+            
+        }
+
+        void backgroundRender_DoWork(object sender, DoWorkEventArgs e)
+        {
+            textBoxStopWatch.Text = "Initializing...";
+            BackgroundWorker worker = sender as BackgroundWorker;
+            e.Result = render(worker, e);
+        }
+
+        List<Bitmap> render(BackgroundWorker worker, DoWorkEventArgs e)
+        {
+            int nlt = outerSize * approachRate;
+            long time = 3000 - nlt;
+            int max = (int)Math.Truncate(nlt / (double)interval + 1);
+
+            List<Bitmap> re = new List<Bitmap>();
+            List<long> livingCircles = new List<long>();
+
+            Pen inner = new Pen(Color.Black);
+            Pen outer = new Pen(Color.Blue);
+            Pen erase = new Pen(Color.White);
+
+            // Multi-note Mode
+            /*
+             *  TimeSpan(ms)										#X Circle to Display		Circles Living
+                3000-NLT											1							1
+                3000-NLT+Interval						        	2							2
+                ......
+                3000-NLT+(MAX-1)*Interval				        	MAX							MAX=NLT / Interval
+                // Cycling Starts
+                // A MAX cirlce displayed → The smallest circle disappeared → The next circle display
+                // This interval = Interval
+                ......
+                // Cycleing Ends
+                3000-NLT+(beatSum-1)*Interval		            	The last MAX circle		    MAX
+                ......												None
+                3000+(beatSum-1)*Interval					        None						0
+             * */
+            if (nlt > interval)
+            {
+                // first circle
+                Bitmap toRender = new Bitmap(BmpX, BmpY);
+                Graphics rendering = Graphics.FromImage(toRender);
+                rendering.FillRectangle(Brushes.White, 0, 0, BmpX - 1, BmpY - 1);
+                rendering.DrawEllipse(inner, circleX, circleY, circleSize, circleSize);
+                rendering.DrawEllipse(outer, circleX - outerSize, circleY - outerSize, circleSize + outerSize * 2, circleSize + outerSize * 2);
+                livingCircles.Add(circleX - outerSize);
+                re.Add(new Bitmap(toRender));
+
+
+                // first period (circle number increasing) & second period (cycling period)
+                for (long i = time + approachRate; i <= time + max * interval; i = i + approachRate)
+                {
+                    // narrow currently existing circles first
+                    for (int k = livingCircles.Count() - 1; k >= 0; k--)
+                    {
+                        long distance = circleX - livingCircles[k];
+                        rendering.DrawEllipse(erase, livingCircles[k], circleY - distance, distance * 2 + circleSize, distance * 2 + circleSize);
+                        livingCircles[k]++;
+                        if (livingCircles[k] == circleX)
+                        {
+                            livingCircles.RemoveAt(k);
+                        }
+                        else
+                        {
+                            distance = circleX - livingCircles[k];
+                            rendering.DrawEllipse(outer, livingCircles[k], circleY - distance, distance * 2 + circleSize, distance * 2 + circleSize);
+                        }
+                    }
+
+                    // whether we should draw a new circle or not
+                    if (livingCircles[livingCircles.Count() - 1] - (circleX - outerSize) == interval / approachRate)
+                    {
+                        rendering.DrawEllipse(outer, circleX - outerSize, circleY - outerSize, circleSize + outerSize * 2, circleSize + outerSize * 2);
+                        livingCircles.Add(circleX - outerSize);
+                    }
+
+                    // save the new bitmap
+                    re.Add(new Bitmap(toRender));
+                }
+
+                // third period (circle number decreasing)
+                while (livingCircles.Count() > 0)
+                {
+                    // narrow currently existing circles
+                    for (int k = livingCircles.Count() - 1; k >= 0; k--)
+                    {
+                        long distance = circleX - livingCircles[k];
+                        rendering.DrawEllipse(erase, livingCircles[k], circleY - distance, distance * 2 + circleSize, distance * 2 + circleSize);
+                        livingCircles[k]++;
+                        if (livingCircles[k] == circleX)
+                        {
+                            livingCircles.RemoveAt(k);
+                        }
+                        else
+                        {
+                            distance = circleX - livingCircles[k];
+                            rendering.DrawEllipse(outer, livingCircles[k], circleY - distance, distance * 2 + circleSize, distance * 2 + circleSize);
+                        }
+                    }
+
+                    re.Add(new Bitmap(toRender));
+                }
+                /*
+                for (int i = 0; i < re.Count(); i++)
+                {
+                    re[i].Save("D:\\test\\" + i.ToString() + ".bmp");
+                }
+                */
+                return re;
+            }
+
+            // Single note mode
+            if (nlt <= interval)
+            {
+                // draw the first circle
+                Bitmap toRender = new Bitmap(BmpX, BmpY);
+                Graphics rendering = Graphics.FromImage(toRender);
+                rendering.FillRectangle(Brushes.White, 0, 0, BmpX - 1, BmpY - 1);
+                rendering.DrawEllipse(inner, circleX, circleY, circleSize, circleSize);
+                rendering.DrawEllipse(outer, circleX - outerSize, circleY - outerSize, circleSize + outerSize * 2, circleSize + outerSize * 2);
+                livingCircles.Add(circleX - outerSize);
+                re.Add(new Bitmap(toRender));
+
+                // narrow it
+                while (livingCircles.Count() > 0)
+                {
+                    // narrow currently existing circles
+                    for (int k = livingCircles.Count() - 1; k >= 0; k--)
+                    {
+                        long distance = circleX - livingCircles[k];
+                        rendering.DrawEllipse(erase, livingCircles[k], circleY - distance, distance * 2 + circleSize, distance * 2 + circleSize);
+                        livingCircles[k]++;
+                        if (livingCircles[k] == circleX)
+                        {
+                            livingCircles.RemoveAt(k);
+                        }
+                        else
+                        {
+                            distance = circleX - livingCircles[k];
+                            rendering.DrawEllipse(outer, livingCircles[k], circleY - distance, distance * 2 + circleSize, distance * 2 + circleSize);
+                        }
+                    }
+
+                    re.Add(new Bitmap(toRender));
+                }
+
+                /*
+                for (int i = 0; i < re.Count(); i++)
+                {
+                    re[i].Save("D:\\test\\" + i.ToString() + ".bmp");
+                }
+                */
+                return re;
+            }
+
+            return null;
         }
         /* The Time Line Mode Ends */
     }
