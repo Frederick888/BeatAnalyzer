@@ -206,7 +206,26 @@ namespace Beat_Analyzer
 
         private void buttonHelp_Click(object sender, EventArgs e)
         {
-            
+            if (radioButtonSpeedMode.Checked)
+            {
+                string msg = "";
+                msg += "Select an SE and input the beat sum first\n";
+                msg += "Then just click start, then choose two keys on your keyboard and hit them as fast as you can\n";
+                msg += "After you finish, the analyzer will give you the results automatically";
+                MessageBox.Show(msg, "Help");
+            }
+            if (radioButtonTimeLineMode.Checked)
+            {
+                string msg = "";
+                msg += "Beat Sum: The sum number of beats you want\n";
+                msg += "Interval: The interval between two beats\n";
+                msg += "Calibration: Edit the number as you like. It will be added to all your beats\n";
+                msg += "Inner: The size of the note itself\n";
+                msg += "Outer: The size of the biggest circle. Note that it means \"How larger is the biggest circle than the note itself\"\n";
+                msg += "Approach Rate: The narrowing sppeed. The smaller, the faster\n";
+                msg += "Difficulty Settings: Set the ranges of the judgements";
+                MessageBox.Show(msg, "Help");
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -640,7 +659,7 @@ namespace Beat_Analyzer
             if (!(just < great && great < good && good < miss))
                 inputError += "You must obey the rule of Just<Great<Good<Ignore";
             if (outerSize * approachRate > 2500)
-                inputError += "Outer * Approach Rate should be less than or equal to 2500";
+                inputError += "Outer * Approach Rate should be less than or equal to 2500\n";
             if (inputError != "")
             {
                 inputError = inputError.Substring(0, inputError.Length - 1);
