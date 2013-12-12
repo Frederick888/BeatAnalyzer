@@ -151,7 +151,7 @@
             this.maskedTextBox1.Mask = "9999";
             this.maskedTextBox1.Name = "maskedTextBox1";
             this.maskedTextBox1.Size = new System.Drawing.Size(75, 46);
-            this.maskedTextBox1.TabIndex = 3;
+            this.maskedTextBox1.TabIndex = 2;
             // 
             // label2
             // 
@@ -179,7 +179,7 @@
             this.button1.Location = new System.Drawing.Point(494, 8);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(146, 46);
-            this.button1.TabIndex = 6;
+            this.button1.TabIndex = 30;
             this.button1.Text = "(Re)Start";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -363,7 +363,7 @@
             this.buttonSE.Location = new System.Drawing.Point(442, 8);
             this.buttonSE.Name = "buttonSE";
             this.buttonSE.Size = new System.Drawing.Size(46, 46);
-            this.buttonSE.TabIndex = 26;
+            this.buttonSE.TabIndex = 0;
             this.buttonSE.Text = "...";
             this.buttonSE.UseVisualStyleBackColor = true;
             this.buttonSE.Click += new System.EventHandler(this.buttonSE_Click);
@@ -395,7 +395,7 @@
             this.groupBoxSpeedMode.Location = new System.Drawing.Point(672, 93);
             this.groupBoxSpeedMode.Name = "groupBoxSpeedMode";
             this.groupBoxSpeedMode.Size = new System.Drawing.Size(470, 440);
-            this.groupBoxSpeedMode.TabIndex = 28;
+            this.groupBoxSpeedMode.TabIndex = 999;
             this.groupBoxSpeedMode.TabStop = false;
             this.groupBoxSpeedMode.Text = "Speed Mode";
             // 
@@ -412,7 +412,7 @@
             this.groupBoxTimeLineMode.Location = new System.Drawing.Point(672, 93);
             this.groupBoxTimeLineMode.Name = "groupBoxTimeLineMode";
             this.groupBoxTimeLineMode.Size = new System.Drawing.Size(470, 440);
-            this.groupBoxTimeLineMode.TabIndex = 30;
+            this.groupBoxTimeLineMode.TabIndex = 999;
             this.groupBoxTimeLineMode.TabStop = false;
             this.groupBoxTimeLineMode.Text = "Time Line Mode";
             // 
@@ -422,7 +422,7 @@
             this.buttonRes.Location = new System.Drawing.Point(330, 19);
             this.buttonRes.Name = "buttonRes";
             this.buttonRes.Size = new System.Drawing.Size(134, 46);
-            this.buttonRes.TabIndex = 36;
+            this.buttonRes.TabIndex = 12;
             this.buttonRes.Text = "Results";
             this.buttonRes.UseVisualStyleBackColor = true;
             this.buttonRes.Click += new System.EventHandler(this.buttonRes_Click);
@@ -445,7 +445,7 @@
             this.groupBox2.Location = new System.Drawing.Point(238, 234);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(226, 203);
-            this.groupBox2.TabIndex = 32;
+            this.groupBox2.TabIndex = 999;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Difficulty Settings (ms)";
             // 
@@ -465,7 +465,7 @@
             this.textBoxMiss.Location = new System.Drawing.Point(89, 145);
             this.textBoxMiss.Name = "textBoxMiss";
             this.textBoxMiss.Size = new System.Drawing.Size(75, 35);
-            this.textBoxMiss.TabIndex = 61;
+            this.textBoxMiss.TabIndex = 11;
             this.textBoxMiss.Text = "200";
             // 
             // label35
@@ -514,7 +514,7 @@
             this.textBoxGood.Location = new System.Drawing.Point(89, 104);
             this.textBoxGood.Name = "textBoxGood";
             this.textBoxGood.Size = new System.Drawing.Size(75, 35);
-            this.textBoxGood.TabIndex = 56;
+            this.textBoxGood.TabIndex = 10;
             this.textBoxGood.Text = "125";
             // 
             // label30
@@ -533,7 +533,7 @@
             this.textBoxGreat.Location = new System.Drawing.Point(89, 63);
             this.textBoxGreat.Name = "textBoxGreat";
             this.textBoxGreat.Size = new System.Drawing.Size(75, 35);
-            this.textBoxGreat.TabIndex = 54;
+            this.textBoxGreat.TabIndex = 9;
             this.textBoxGreat.Text = "75";
             // 
             // label29
@@ -552,7 +552,7 @@
             this.textBoxJust.Location = new System.Drawing.Point(89, 22);
             this.textBoxJust.Name = "textBoxJust";
             this.textBoxJust.Size = new System.Drawing.Size(75, 35);
-            this.textBoxJust.TabIndex = 52;
+            this.textBoxJust.TabIndex = 8;
             this.textBoxJust.Text = "50";
             // 
             // label28
@@ -572,7 +572,7 @@
             this.groupBox1.Location = new System.Drawing.Point(6, 234);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(226, 206);
-            this.groupBox1.TabIndex = 31;
+            this.groupBox1.TabIndex = 999;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Note Settings";
             // 
@@ -638,7 +638,7 @@
             this.textBoxCircleSize.Location = new System.Drawing.Point(79, 2);
             this.textBoxCircleSize.Name = "textBoxCircleSize";
             this.textBoxCircleSize.Size = new System.Drawing.Size(75, 35);
-            this.textBoxCircleSize.TabIndex = 30;
+            this.textBoxCircleSize.TabIndex = 5;
             this.textBoxCircleSize.Text = "50";
             // 
             // textBoxOuter
@@ -647,7 +647,7 @@
             this.textBoxOuter.Location = new System.Drawing.Point(79, 43);
             this.textBoxOuter.Name = "textBoxOuter";
             this.textBoxOuter.Size = new System.Drawing.Size(75, 35);
-            this.textBoxOuter.TabIndex = 39;
+            this.textBoxOuter.TabIndex = 6;
             this.textBoxOuter.Text = "85";
             // 
             // label23
@@ -676,7 +676,7 @@
             this.textBoxApproachRate.Location = new System.Drawing.Point(8, 31);
             this.textBoxApproachRate.Name = "textBoxApproachRate";
             this.textBoxApproachRate.Size = new System.Drawing.Size(119, 35);
-            this.textBoxApproachRate.TabIndex = 31;
+            this.textBoxApproachRate.TabIndex = 7;
             this.textBoxApproachRate.Text = "20";
             // 
             // label21
@@ -706,7 +706,7 @@
             this.groupBox3.Location = new System.Drawing.Point(6, 67);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(458, 161);
-            this.groupBox3.TabIndex = 33;
+            this.groupBox3.TabIndex = 999;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "General Settings";
             // 
@@ -797,7 +797,7 @@
             this.textBoxInterval.Location = new System.Drawing.Point(3, 3);
             this.textBoxInterval.Name = "textBoxInterval";
             this.textBoxInterval.Size = new System.Drawing.Size(140, 35);
-            this.textBoxInterval.TabIndex = 42;
+            this.textBoxInterval.TabIndex = 3;
             this.textBoxInterval.Text = "1000";
             this.textBoxInterval.TextChanged += new System.EventHandler(this.textBoxInterval_TextChanged);
             // 
@@ -870,7 +870,7 @@
             this.textBoxCalibration.Location = new System.Drawing.Point(0, 4);
             this.textBoxCalibration.Name = "textBoxCalibration";
             this.textBoxCalibration.Size = new System.Drawing.Size(140, 35);
-            this.textBoxCalibration.TabIndex = 48;
+            this.textBoxCalibration.TabIndex = 4;
             this.textBoxCalibration.Text = "25";
             // 
             // label26
@@ -889,7 +889,7 @@
             this.textBoxBeatSum.Location = new System.Drawing.Point(3, 27);
             this.textBoxBeatSum.Name = "textBoxBeatSum";
             this.textBoxBeatSum.Size = new System.Drawing.Size(140, 35);
-            this.textBoxBeatSum.TabIndex = 27;
+            this.textBoxBeatSum.TabIndex = 2;
             this.textBoxBeatSum.Text = "20";
             this.textBoxBeatSum.TextChanged += new System.EventHandler(this.textBoxBeatSum_TextChanged);
             // 
@@ -900,7 +900,7 @@
             this.textBoxStopWatch.Location = new System.Drawing.Point(131, 26);
             this.textBoxStopWatch.Name = "textBoxStopWatch";
             this.textBoxStopWatch.Size = new System.Drawing.Size(165, 35);
-            this.textBoxStopWatch.TabIndex = 33;
+            this.textBoxStopWatch.TabIndex = 999;
             // 
             // label20
             // 
@@ -920,7 +920,7 @@
             this.groupBoxModeSelect.Location = new System.Drawing.Point(672, 12);
             this.groupBoxModeSelect.Name = "groupBoxModeSelect";
             this.groupBoxModeSelect.Size = new System.Drawing.Size(311, 75);
-            this.groupBoxModeSelect.TabIndex = 29;
+            this.groupBoxModeSelect.TabIndex = 999;
             this.groupBoxModeSelect.TabStop = false;
             this.groupBoxModeSelect.Text = "Mode Select";
             // 
@@ -944,7 +944,7 @@
             this.radioButtonSpeedMode.Location = new System.Drawing.Point(6, 26);
             this.radioButtonSpeedMode.Name = "radioButtonSpeedMode";
             this.radioButtonSpeedMode.Size = new System.Drawing.Size(122, 42);
-            this.radioButtonSpeedMode.TabIndex = 0;
+            this.radioButtonSpeedMode.TabIndex = 1;
             this.radioButtonSpeedMode.TabStop = true;
             this.radioButtonSpeedMode.Text = "Speed";
             this.radioButtonSpeedMode.UseVisualStyleBackColor = true;
@@ -956,7 +956,7 @@
             this.buttonHelp.Location = new System.Drawing.Point(989, 36);
             this.buttonHelp.Name = "buttonHelp";
             this.buttonHelp.Size = new System.Drawing.Size(126, 46);
-            this.buttonHelp.TabIndex = 31;
+            this.buttonHelp.TabIndex = 999;
             this.buttonHelp.Text = "Help";
             this.buttonHelp.UseVisualStyleBackColor = true;
             this.buttonHelp.Click += new System.EventHandler(this.buttonHelp_Click);
