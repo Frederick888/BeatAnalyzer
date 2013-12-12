@@ -67,8 +67,8 @@ namespace Beat_Analyzer
                     || (e.KeyValue >= 109 && e.KeyValue <= 111) || e.KeyValue == 189 || e.KeyValue == 187 || e.KeyValue == 192
                     || (e.KeyValue >= 48 && e.KeyValue <= 57)))
                 {
-                    labelAcc.Text = e.KeyValue.ToString();
-                    labelAcc.Update();
+                    //labelAcc.Text = e.KeyValue.ToString();
+                    //labelAcc.Update();
 
                     DateTime pressTime = DateTime.Now;
                     pressTime = pressTime.AddMilliseconds(calibration);
@@ -107,6 +107,7 @@ namespace Beat_Analyzer
                         if (delay <= great)
                         {
                             labelAcc.Text = "Great";
+                            labelAcc.Update();
 
                             mark[near] = 2;
                         }
